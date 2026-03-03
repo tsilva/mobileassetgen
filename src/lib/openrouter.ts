@@ -5,6 +5,44 @@ interface GenerateImageOptions {
   aspectRatio?: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function extractImageUrl(data: any): string | null {
+  const choice = data.choices?.[0];
+  const message = choice?.message;
+
+  // Format 1: message.images[] array (current OpenRouter format)
+  const images = message?.images;
+  if (Array.isArray(images) && images.length > 0) {
+    const url = images[0]?.image_url?.url;
+    if (url) {
+      return url.startsWith("data:") ? url : `data:image/png;base64,${url}`;
+    }
+  }
+
+  // Format 2: content as array of parts with image_url type
+  const content = message?.content;
+  if (Array.isArray(content)) {
+    const imagePart = content.find(
+      (p: { type?: string }) => typeof p === "object" && p.type === "image_url"
+    );
+    if (imagePart?.image_url?.url) {
+      const url = imagePart.image_url.url as string;
+      return url.startsWith("data:") ? url : `data:image/png;base64,${url}`;
+    }
+
+    // Format 3: inline_data format
+    const inlineDataPart = content.find(
+      (p: { type?: string }) => typeof p === "object" && p.type === "inline_data"
+    );
+    if (inlineDataPart?.inline_data?.data) {
+      const mime = inlineDataPart.inline_data.mime_type || "image/png";
+      return `data:${mime};base64,${inlineDataPart.inline_data.data}`;
+    }
+  }
+
+  return null;
+}
+
 export async function generateImage(
   apiKey: string,
   prompt: string,
@@ -47,38 +85,23 @@ export async function generateImage(
 
   const data = await response.json();
 
-  const content = data.choices?.[0]?.message?.content;
-  if (!content) {
-    throw new Error("No content in API response");
+  // Check for safety filter / content blocking
+  const choice = data.choices?.[0];
+  const finishReason = choice?.finish_reason;
+  const nativeFinishReason = choice?.native_finish_reason;
+  if (finishReason === "content_filter" || nativeFinishReason === "SAFETY") {
+    throw new Error(
+      "The image was blocked by the model's safety filter. Try a different description."
+    );
   }
 
-  // Content can be a string or array of parts
-  const parts = Array.isArray(content) ? content : [content];
-  const imagePart = parts.find(
-    (p: { type?: string }) => typeof p === "object" && p.type === "image_url"
-  );
-
-  if (imagePart?.image_url?.url) {
-    const url = imagePart.image_url.url as string;
-    // If already a data URL, return as-is
-    if (url.startsWith("data:")) {
-      return url;
-    }
-    // If base64 without prefix, add it
-    return `data:image/png;base64,${url}`;
-  }
-
-  // Fallback: look for inline_data format
-  const inlineDataPart = parts.find(
-    (p: { type?: string }) => typeof p === "object" && p.type === "inline_data"
-  );
-  if (inlineDataPart?.inline_data?.data) {
-    const mime = inlineDataPart.inline_data.mime_type || "image/png";
-    return `data:${mime};base64,${inlineDataPart.inline_data.data}`;
+  const imageUrl = extractImageUrl(data);
+  if (imageUrl) {
+    return imageUrl;
   }
 
   throw new Error(
-    "No image found in API response. The model may have returned text only."
+    `No image found in API response. The model may have returned text only. Raw: ${JSON.stringify(data).slice(0, 300)}`
   );
 }
 
