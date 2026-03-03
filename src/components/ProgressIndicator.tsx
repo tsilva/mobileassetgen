@@ -32,8 +32,7 @@ const steps: Step[] = [
 
 function getStepStatus(
   step: Step,
-  phase: GenerationPhase,
-  stepIndex: number
+  phase: GenerationPhase
 ): "pending" | "active" | "complete" {
   if (step.phases.includes(phase)) return "active";
 
@@ -56,60 +55,65 @@ export default function ProgressIndicator({ phase }: ProgressIndicatorProps) {
   if (phase === "idle" || phase === "error") return null;
 
   return (
-    <div className="space-y-3 rounded-lg border border-border bg-card p-4">
-      <h3 className="text-sm font-medium text-muted-foreground">Progress</h3>
-      <div className="space-y-2">
+    <div className="rounded-xl border border-border-subtle bg-surface p-5 animate-fade-in">
+      <div className="flex items-center gap-2 mb-4">
+        <div className="w-2 h-2 rounded-full bg-accent animate-pulse-glow" />
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted">
+          Pipeline
+        </h3>
+      </div>
+
+      <div className="space-y-0">
         {steps.map((step, i) => {
-          const status = getStepStatus(step, phase, i);
+          const status = getStepStatus(step, phase);
+          const isLast = i === steps.length - 1;
+
           return (
-            <div key={step.label} className="flex items-center gap-3 text-sm">
-              {status === "complete" && (
-                <svg
-                  className="h-4 w-4 text-success flex-shrink-0"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            <div key={step.label} className="flex items-start gap-3.5">
+              {/* Timeline rail */}
+              <div className="flex flex-col items-center">
+                {/* Node */}
+                {status === "complete" && (
+                  <div className="w-6 h-6 rounded-full bg-success/15 border border-success/40 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-3 h-3 text-success" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                )}
+                {status === "active" && (
+                  <div className="w-6 h-6 rounded-full bg-accent/15 border border-accent/50 flex items-center justify-center flex-shrink-0 animate-pulse-glow">
+                    <div className="w-2 h-2 rounded-full bg-accent" />
+                  </div>
+                )}
+                {status === "pending" && (
+                  <div className="w-6 h-6 rounded-full border border-border flex items-center justify-center flex-shrink-0">
+                    <div className="w-1.5 h-1.5 rounded-full bg-dim" />
+                  </div>
+                )}
+
+                {/* Connecting line */}
+                {!isLast && (
+                  <div
+                    className={`w-[2px] h-5 my-0.5 ${
+                      status === "complete"
+                        ? "bg-success/30"
+                        : status === "active"
+                          ? "progress-active-line"
+                          : "bg-border-subtle"
+                    }`}
                   />
-                </svg>
-              )}
-              {status === "active" && (
-                <svg
-                  className="h-4 w-4 text-primary animate-spin flex-shrink-0"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                  />
-                </svg>
-              )}
-              {status === "pending" && (
-                <div className="h-4 w-4 rounded-full border-2 border-muted flex-shrink-0" />
-              )}
+                )}
+              </div>
+
+              {/* Label */}
               <span
-                className={
+                className={`text-sm pt-0.5 ${
                   status === "active"
-                    ? "text-foreground"
+                    ? "text-foreground font-medium"
                     : status === "complete"
                       ? "text-success"
-                      : "text-muted-foreground"
-                }
+                      : "text-dim"
+                }`}
               >
                 {step.label}
               </span>

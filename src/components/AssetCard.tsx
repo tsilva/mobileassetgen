@@ -12,7 +12,7 @@ export default function AssetCard({ asset }: AssetCardProps) {
   const isSmall = spec.width <= 96;
 
   return (
-    <div className="rounded-lg border border-border bg-card overflow-hidden">
+    <div className="group rounded-lg border border-border-subtle bg-surface overflow-hidden card-hover">
       <div className="checkerboard flex items-center justify-center p-4 min-h-[100px]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -20,7 +20,7 @@ export default function AssetCard({ asset }: AssetCardProps) {
           alt={spec.name}
           width={isSmall ? spec.width * 2 : Math.min(spec.width, 200)}
           height={isSmall ? spec.height * 2 : Math.min(spec.height, 200)}
-          className={isSmall ? "pixelated" : ""}
+          className={`transition-transform duration-200 group-hover:scale-105 ${isSmall ? "pixelated" : ""}`}
           style={
             isSmall
               ? { imageRendering: "pixelated" }
@@ -28,19 +28,24 @@ export default function AssetCard({ asset }: AssetCardProps) {
           }
         />
       </div>
-      <div className="px-3 py-2 border-t border-border">
-        <p className="text-xs font-mono text-muted-foreground truncate">
+      <div className="px-3 py-2.5 border-t border-border-subtle bg-surface">
+        <p className="text-[11px] font-mono text-dim truncate leading-tight">
           {spec.zipPath}
         </p>
-        <div className="flex items-center justify-between mt-1">
-          <span className="text-xs text-muted-foreground">
-            {spec.width}x{spec.height}
+        <div className="flex items-center justify-between mt-1.5">
+          <span className="text-[11px] font-mono text-dim tabular-nums">
+            {spec.width}&times;{spec.height}
           </span>
           <button
             onClick={() => downloadSingleAsset(asset)}
-            className="text-xs text-primary hover:text-primary-hover transition-colors"
+            className="opacity-0 group-hover:opacity-100 text-[11px] font-medium text-accent hover:text-accent-hover transition-all duration-200 flex items-center gap-1"
           >
-            Download
+            <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Save
           </button>
         </div>
       </div>

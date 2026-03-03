@@ -2,13 +2,34 @@
 
 export default function Header() {
   return (
-    <header className="text-center mb-10">
-      <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-        Mobile Asset Generator
+    <header className="relative text-center mb-16 pt-6">
+      <div className="hero-glow" />
+
+      <div
+        className="animate-fade-in-up"
+        style={{ animationDelay: "0ms" }}
+      >
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-border-subtle bg-surface text-xs font-medium text-muted mb-8 tracking-wide uppercase">
+          <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+          Android Asset Forge
+        </div>
+      </div>
+
+      <h1
+        className="animate-fade-in-up font-display text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05]"
+        style={{ animationDelay: "80ms" }}
+      >
+        Mobile Asset
+        <br />
+        <span className="text-accent">Generator</span>
       </h1>
-      <p className="mt-3 text-muted-foreground max-w-lg mx-auto">
-        Generate all image assets required to publish an Android app.
-        Provide your OpenRouter API key and describe your app icon.
+
+      <p
+        className="animate-fade-in-up mt-5 text-muted max-w-md mx-auto text-lg leading-relaxed"
+        style={{ animationDelay: "160ms" }}
+      >
+        Transform a single text prompt into every image asset
+        your Android app needs to launch.
       </p>
     </header>
   );

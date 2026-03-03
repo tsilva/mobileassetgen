@@ -91,24 +91,20 @@ export default function Home() {
     dispatch({ type: "START_GENERATION" });
 
     try {
-      // Step 1: Generate logo
       const logoPrompt = buildLogoPrompt(prompt);
       const logoDataUrl = await generateImage(apiKey, logoPrompt);
       dispatch({ type: "LOGO_GENERATED", dataUrl: logoDataUrl });
 
-      // Step 2: Process all logo-derived assets
       const logoSpecs = getLogoSpecs();
       const logoAssets = await processAllAssets(logoDataUrl, logoSpecs);
       dispatch({ type: "ASSETS_PROCESSED", assets: logoAssets });
 
-      // Step 3: Generate feature graphic
       const featurePrompt = buildFeaturePrompt(prompt);
       const featureDataUrl = await generateImage(apiKey, featurePrompt, {
         aspectRatio: "16:9",
       });
       dispatch({ type: "FEATURE_GENERATED", dataUrl: featureDataUrl });
 
-      // Step 4: Process feature graphic
       const featureSpecs = getFeatureSpecs();
       const featureAssets = await processAllAssets(
         featureDataUrl,
@@ -125,13 +121,18 @@ export default function Home() {
   }, [apiKey, prompt]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-background dot-grid relative overflow-hidden">
+      <div className="relative z-10 mx-auto max-w-3xl px-5 py-14 sm:px-8">
         <Header />
 
-        <div className="space-y-6">
-          <div className="rounded-xl border border-border bg-card p-6 space-y-5">
+        <div className="space-y-5">
+          {/* Input card with gradient border */}
+          <div
+            className="animate-fade-in-up rounded-xl bg-surface p-6 sm:p-7 space-y-6 gradient-border"
+            style={{ animationDelay: "240ms" }}
+          >
             <ApiKeyInput value={apiKey} onChange={setApiKey} />
+            <div className="h-px bg-border-subtle" />
             <PromptForm
               prompt={prompt}
               onPromptChange={setPrompt}
@@ -144,24 +145,46 @@ export default function Home() {
           <ProgressIndicator phase={state.phase} />
 
           {state.phase === "error" && state.error && (
-            <div className="rounded-lg border border-error/50 bg-error/10 p-4">
-              <p className="text-sm text-error">{state.error}</p>
-              <button
-                onClick={() => dispatch({ type: "RESET" })}
-                className="mt-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Try again
-              </button>
+            <div className="rounded-xl border border-error/30 bg-error/5 p-5 animate-fade-in">
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 rounded-full bg-error/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg className="w-3 h-3 text-error" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-sm text-error leading-relaxed">{state.error}</p>
+                  <button
+                    onClick={() => dispatch({ type: "RESET" })}
+                    className="mt-2.5 text-sm text-muted hover:text-accent transition-colors"
+                  >
+                    Try again
+                  </button>
+                </div>
+              </div>
             </div>
           )}
 
           {state.assets.length > 0 && (
-            <>
+            <div className="space-y-8">
               <DownloadControls assets={state.assets} />
               <AssetPreview assets={state.assets} />
-            </>
+            </div>
           )}
         </div>
+
+        {/* Footer */}
+        <footer
+          className="animate-fade-in-up mt-20 text-center"
+          style={{ animationDelay: "320ms" }}
+        >
+          <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent mb-6" />
+          <p className="text-xs text-dim">
+            All processing happens locally in your browser.
+            No images are stored on any server.
+          </p>
+        </footer>
       </div>
     </div>
   );
