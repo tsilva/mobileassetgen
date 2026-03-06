@@ -219,10 +219,7 @@ export default function Home() {
           style={{ animationDelay: "320ms" }}
         >
           <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent mb-6" />
-          <p className="text-xs text-dim">
-            All processing happens locally in your browser.
-            No images are stored on any server.
-          </p>
+          <p className="text-xs text-dim" />
         </footer>
       </div>
     </div>
