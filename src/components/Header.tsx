@@ -16,7 +16,7 @@ export default function Header() {
       </div>
 
       <h1
-        className="animate-fade-in-up font-display text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05]"
+        className="animate-fade-in-up font-display text-4xl sm:text-5xl font-semibold tracking-tight leading-[1.05]"
         style={{ animationDelay: "80ms" }}
       >
         Mobile Asset
