@@ -1,10 +1,7 @@
 "use client";
 
 import { useReducer, useState, useCallback, useEffect } from "react";
-import {
-  GenerationState,
-  GenerationAction,
-} from "@/types";
+import { GenerationState, GenerationAction } from "@/types";
 import { getLogoSpecs, getFeatureSpecs } from "@/config/assetConfig";
 import {
   generateImage,
@@ -25,6 +22,7 @@ const initialState: GenerationState = {
   logoDataUrl: null,
   featureDataUrl: null,
   error: null,
+  platform: "android",
 };
 
 function reducer(
@@ -69,6 +67,8 @@ function reducer(
       };
     case "RESET":
       return initialState;
+    case "SET_PLATFORM":
+      return { ...state, platform: action.platform };
     default:
       return state;
   }
@@ -176,6 +176,8 @@ export default function Home() {
               onGenerate={handleGenerate}
               disabled={!apiKey.trim() || !prompt.trim() || isGenerating}
               generating={isGenerating}
+              platform={state.platform}
+              onPlatformChange={(platform) => dispatch({ type: "SET_PLATFORM", platform })}
             />
           </div>
 

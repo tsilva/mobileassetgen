@@ -1,5 +1,7 @@
 export type AssetTransform = "resize" | "circle-crop" | "silhouette";
 
+export type Platform = "android" | "ios" | "web";
+
 export type AssetCategory =
   | "launcher-icons"
   | "round-icons"
@@ -40,6 +42,7 @@ export interface GenerationState {
   logoDataUrl: string | null;
   featureDataUrl: string | null;
   error: string | null;
+  platform: Platform;
 }
 
 export type GenerationAction =
@@ -49,7 +52,8 @@ export type GenerationAction =
   | { type: "FEATURE_GENERATED"; dataUrl: string }
   | { type: "FEATURE_PROCESSED"; assets: GeneratedAsset[] }
   | { type: "ERROR"; message: string }
-  | { type: "RESET" };
+  | { type: "RESET" }
+  | { type: "SET_PLATFORM"; platform: Platform };
 
 export interface CategoryDisplayInfo {
   label: string;
