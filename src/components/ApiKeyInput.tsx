@@ -1,33 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-const STORAGE_KEY = "mobileassetgen-api-key";
-
 interface ApiKeyInputProps {
   value: string;
   onChange: (key: string) => void;
+  isEditing?: boolean;
 }
 
-export default function ApiKeyInput({ value, onChange }: ApiKeyInputProps) {
-  const [loaded, setLoaded] = useState(false);
+export default function ApiKeyInput({ value, onChange, isEditing = true }: ApiKeyInputProps) {
+  const loaded = typeof window !== "undefined";
 
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      onChange(stored);
-    }
-    setLoaded(true);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  if (!loaded) return null;
 
-  useEffect(() => {
-    if (!loaded) return;
-    if (value) {
-      localStorage.setItem(STORAGE_KEY, value);
-    } else {
-      localStorage.removeItem(STORAGE_KEY);
-    }
-  }, [value, loaded]);
+  if (!isEditing) {
+    return (
+      <div className="flex items-center gap-2 text-sm text-muted">
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+          <path d="M7 11V7a5 5 0 0110 0v4" />
+        </svg>
+        <span>API key saved</span>
+        <span className="text-dim">•</span>
+        <span className="text-accent">Ready to generate</span>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-2.5">

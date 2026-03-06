@@ -1,10 +1,9 @@
 "use client";
 
-import { useReducer, useState, useCallback } from "react";
+import { useReducer, useState, useCallback, useEffect } from "react";
 import {
   GenerationState,
   GenerationAction,
-  GeneratedAsset,
 } from "@/types";
 import { getLogoSpecs, getFeatureSpecs } from "@/config/assetConfig";
 import {
@@ -75,15 +74,53 @@ function reducer(
   }
 }
 
+const STORAGE_KEY = "mobileassetgen-api-key";
+
+function getInitialApiKey(): string {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem(STORAGE_KEY) || "";
+  }
+  return "";
+}
+
 export default function Home() {
-  const [apiKey, setApiKey] = useState("");
+  const [apiKey, setApiKey] = useState(getInitialApiKey);
+  const [isEditingKey, setIsEditingKey] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    setIsLoaded(true); // eslint-disable-line react-hooks/set-state-in-effect
+  }, []);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    if (apiKey) {
+      localStorage.setItem(STORAGE_KEY, apiKey);
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }, [apiKey, isLoaded]);
 
   const isGenerating =
     state.phase !== "idle" &&
     state.phase !== "complete" &&
     state.phase !== "error";
+
+  const hasKey = !!apiKey.trim();
+  const showKeyInput = !hasKey || isEditingKey;
+
+  const handleSettingsClick = useCallback(() => {
+    setIsEditingKey(true);
+  }, []);
+
+  const handleKeyChange = useCallback((key: string) => {
+    setApiKey(key);
+    if (!key.trim()) {
+      setIsEditingKey(true);
+    }
+  }, []);
 
   const handleGenerate = useCallback(async () => {
     if (!apiKey.trim() || !prompt.trim()) return;
@@ -123,7 +160,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background dot-grid relative overflow-hidden">
       <div className="relative z-10 mx-auto max-w-3xl px-5 py-14 sm:px-8">
-        <Header />
+        <Header onSettingsClick={handleSettingsClick} showSettings={hasKey && !isEditingKey} />
 
         <div className="space-y-5">
           {/* Input card with gradient border */}
@@ -131,8 +168,8 @@ export default function Home() {
             className="animate-fade-in-up rounded-xl bg-surface p-6 sm:p-7 space-y-6 gradient-border"
             style={{ animationDelay: "240ms" }}
           >
-            <ApiKeyInput value={apiKey} onChange={setApiKey} />
-            <div className="h-px bg-border-subtle" />
+            <ApiKeyInput value={apiKey} onChange={handleKeyChange} isEditing={showKeyInput} />
+            {showKeyInput && <div className="h-px bg-border-subtle" />}
             <PromptForm
               prompt={prompt}
               onPromptChange={setPrompt}
