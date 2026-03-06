@@ -4,9 +4,10 @@ interface ApiKeyInputProps {
   value: string;
   onChange: (key: string) => void;
   isEditing?: boolean;
+  onEdit?: () => void;
 }
 
-export default function ApiKeyInput({ value, onChange, isEditing = true }: ApiKeyInputProps) {
+export default function ApiKeyInput({ value, onChange, isEditing = true, onEdit }: ApiKeyInputProps) {
   const loaded = typeof window !== "undefined";
 
   if (!loaded) return null;
@@ -20,7 +21,12 @@ export default function ApiKeyInput({ value, onChange, isEditing = true }: ApiKe
         </svg>
         <span>API key saved</span>
         <span className="text-dim">•</span>
-        <span className="text-accent">Ready to generate</span>
+        <button 
+          onClick={onEdit}
+          className="text-accent hover:text-accent/80 transition-colors"
+        >
+          Click to change
+        </button>
       </div>
     );
   }

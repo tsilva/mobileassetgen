@@ -111,7 +111,7 @@ export default function Home() {
   const hasKey = !!apiKey.trim();
   const showKeyInput = !hasKey || isEditingKey;
 
-  const handleSettingsClick = useCallback(() => {
+  const handleEditKey = useCallback(() => {
     setIsEditingKey(true);
   }, []);
 
@@ -160,7 +160,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background dot-grid relative overflow-hidden">
       <div className="relative z-10 mx-auto max-w-3xl px-5 py-14 sm:px-8">
-        <Header onSettingsClick={handleSettingsClick} showSettings={hasKey && !isEditingKey} />
+        <Header />
 
         <div className="space-y-5">
           {/* Input card with gradient border */}
@@ -168,7 +168,7 @@ export default function Home() {
             className="animate-fade-in-up rounded-xl bg-surface p-6 sm:p-7 space-y-6 gradient-border"
             style={{ animationDelay: "240ms" }}
           >
-            <ApiKeyInput value={apiKey} onChange={handleKeyChange} isEditing={showKeyInput} />
+            <ApiKeyInput value={apiKey} onChange={handleKeyChange} isEditing={showKeyInput} onEdit={handleEditKey} />
             {showKeyInput && <div className="h-px bg-border-subtle" />}
             <PromptForm
               prompt={prompt}
