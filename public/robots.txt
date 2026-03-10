@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://mobileassetgen.tsilva.eu/sitemap.xml
