@@ -1,6 +1,7 @@
 "use client";
 
 import { GeneratedAsset } from "@/types";
+import { trackEvent } from "@/lib/analytics";
 import { downloadSingleAsset } from "@/lib/zipBuilder";
 
 interface AssetCardProps {
@@ -10,6 +11,15 @@ interface AssetCardProps {
 export default function AssetCard({ asset }: AssetCardProps) {
   const { spec, dataUrl } = asset;
   const isSmall = spec.width <= 96;
+
+  function handleDownloadAsset() {
+    trackEvent("download_asset_single", {
+      asset_id: spec.id,
+      asset_category: spec.category,
+      asset_name: spec.name,
+    });
+    downloadSingleAsset(asset);
+  }
 
   return (
     <div className="group rounded-lg border border-border-subtle bg-surface overflow-hidden card-hover">
@@ -37,7 +47,7 @@ export default function AssetCard({ asset }: AssetCardProps) {
             {spec.width}&times;{spec.height}
           </span>
           <button
-            onClick={() => downloadSingleAsset(asset)}
+            onClick={handleDownloadAsset}
             className="opacity-0 group-hover:opacity-100 text-[11px] font-medium text-accent hover:text-accent-hover transition-all duration-200 flex items-center gap-1"
           >
             <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

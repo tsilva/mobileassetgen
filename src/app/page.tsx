@@ -9,6 +9,7 @@ import {
   buildFeaturePrompt,
 } from "@/lib/openrouter";
 import { processAllAssets } from "@/lib/imageProcessor";
+import { trackEvent } from "@/lib/analytics";
 import Header from "@/components/Header";
 import ApiKeyInput from "@/components/ApiKeyInput";
 import PromptForm from "@/components/PromptForm";
@@ -125,6 +126,10 @@ export default function Home() {
   const handleGenerate = useCallback(async () => {
     if (!apiKey.trim() || !prompt.trim()) return;
 
+    trackEvent("generate_assets_started", {
+      platform: state.platform,
+      prompt_length: prompt.trim().length,
+    });
     dispatch({ type: "START_GENERATION" });
 
     try {
@@ -148,14 +153,21 @@ export default function Home() {
         featureSpecs
       );
       dispatch({ type: "FEATURE_PROCESSED", assets: featureAssets });
+      trackEvent("generate_assets_completed", {
+        platform: state.platform,
+        asset_count: logoAssets.length + featureAssets.length,
+      });
     } catch (err) {
+      trackEvent("generate_assets_failed", {
+        platform: state.platform,
+      });
       dispatch({
         type: "ERROR",
         message:
           err instanceof Error ? err.message : "An unexpected error occurred",
       });
     }
-  }, [apiKey, prompt]);
+  }, [apiKey, prompt, state.platform]);
 
   return (
     <div className="min-h-screen bg-background dot-grid relative overflow-hidden">

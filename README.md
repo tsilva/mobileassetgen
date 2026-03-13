@@ -26,6 +26,7 @@
 - **🔄 Smart Image Processing** — Center-crop resizing, circular masking, and halo-free silhouette generation with graduated alpha blending
 - **📦 One-Click ZIP Download** — All assets packaged with correct Android resource directory structure (`mipmap-*/`, `drawable-*/`)
 - **🔒 Fully Client-Side** — No backend, no server uploads. Your API key and images never leave your browser
+- **📊 Google Analytics Ready** — Automatically sends page views plus generation and download events when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is configured
 - **🎨 Dark Theme UI** — Polished interface with progress tracking, asset previews, and individual downloads
 
 ## 🚀 Quick Start
@@ -45,6 +46,23 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000), enter your OpenRouter API key, describe your app, and hit **Generate Assets**.
+
+### Optional Analytics
+
+If you want to send analytics to Google Analytics 4, set:
+
+```bash
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+```
+
+When present, the app sends:
+
+- `page_view`
+- `generate_assets_started`
+- `generate_assets_completed`
+- `generate_assets_failed`
+- `download_assets_zip`
+- `download_asset_single`
 
 ## 📐 Generated Assets
 
@@ -95,9 +113,10 @@ Text Prompt → AI Logo Generation → Canvas Processing → 20 Android Assets �
 src/
 ├── app/
 │   ├── page.tsx            # Main page — state machine & generation orchestration
-│   ├── layout.tsx          # Root layout with font configuration
+│   ├── layout.tsx          # Root layout with fonts and analytics
 │   └── globals.css         # Dark theme & animations
 ├── components/
+│   ├── GoogleAnalytics.tsx # GA4 script loader + SPA page views
 │   ├── Header.tsx          # App title & branding
 │   ├── ApiKeyInput.tsx     # API key input (localStorage)
 │   ├── PromptForm.tsx      # Text prompt & generate button
@@ -106,6 +125,7 @@ src/
 │   ├── AssetCard.tsx       # Individual asset card
 │   └── DownloadControls.tsx # ZIP download button
 ├── lib/
+│   ├── analytics.ts        # GA4 helpers and event tracking
 │   ├── openrouter.ts       # OpenRouter API integration
 │   ├── imageProcessor.ts   # Canvas-based image transforms
 │   └── zipBuilder.ts       # ZIP creation utilities

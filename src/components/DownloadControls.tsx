@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { GeneratedAsset } from "@/types";
+import { trackEvent } from "@/lib/analytics";
 import { downloadAllAsZip } from "@/lib/zipBuilder";
 
 interface DownloadControlsProps {
@@ -17,6 +18,9 @@ export default function DownloadControls({ assets }: DownloadControlsProps) {
     setDownloading(true);
     try {
       await downloadAllAsZip(assets);
+      trackEvent("download_assets_zip", {
+        asset_count: assets.length,
+      });
     } catch {
       alert("Failed to create zip file. Please try again.");
     } finally {

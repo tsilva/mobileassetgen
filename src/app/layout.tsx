@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Syne, DM_Sans, JetBrains_Mono } from "next/font/google";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 import "./globals.css";
 
 const SITE_URL = "https://mobileassetgen.tsilva.eu";
@@ -109,6 +110,7 @@ export default function RootLayout({
         className={`${syne.variable} ${dmSans.variable} ${jetbrainsMono.variable} antialiased`}
       >
         {children}
+        <GoogleAnalytics />
         <Analytics />
         <SpeedInsights />
       </body>
