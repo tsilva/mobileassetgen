@@ -1,5 +1,11 @@
+> [!WARNING]
+> ## Archived
+> This project is archived and no longer maintained.
+>
+> Superseded by [repologogen](https://github.com/tsilva/repologogen), which provides a more general-purpose approach to logo and asset generation.
+
 <div align="center">
-  <img src="logo.png" alt="mobileassetgen" width="512"/>
+  <img src="https://raw.githubusercontent.com/tsilva/mobileassetgen/main/logo.png" alt="mobileassetgen" width="512"/>
 
   [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org/)
   [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
