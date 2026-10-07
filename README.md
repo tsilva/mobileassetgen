@@ -1,19 +1,21 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/tsilva/mobileassetgen/main/logo.png" alt="mobileassetgen" width="512"/>
+  <br />
+  <!-- repo-tagline:start -->
+  <strong>📱 Generate Android icons and store assets from one prompt ⚡</strong>
+  <!-- repo-tagline:end -->
+</p>
+
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+  [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
+  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38bdf8?style=flat-square&logo=tailwindcss)](https://tailwindcss.com/)
+
 > [!WARNING]
 > ## Archived
 > This project is archived and no longer maintained.
 >
 > Superseded by [repologogen](https://github.com/tsilva/repologogen), which provides a more general-purpose approach to logo and asset generation.
-
-<div align="center">
-  <img src="https://raw.githubusercontent.com/tsilva/mobileassetgen/main/logo.png" alt="mobileassetgen" width="512"/>
-
-  [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org/)
-  [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
-  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
-  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38bdf8?style=flat-square&logo=tailwindcss)](https://tailwindcss.com/)
-
-  **📱 Generate production-ready Android app assets from a single text prompt — icons, round icons, notifications, and Play Store graphics, all in seconds ⚡**
-</div>
 
 ---
 
